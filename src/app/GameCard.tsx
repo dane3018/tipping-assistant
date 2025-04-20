@@ -1,24 +1,24 @@
-"use client"
-import { useState } from "react"
+"use client";
+import { useState } from "react";
 
 type Team = {
-  id: number
-  name: string
-  ladderPosition: number
-  lastFive: string[]
-}
+  id: number;
+  name: string;
+  ladderPosition: number;
+  lastFive: string[];
+};
 
 type Game = {
-  id: number
-  date: string
-  venue: string
-  home_team: Team
-  away_team: Team
-}
+  id: number;
+  date: string;
+  venue: string;
+  home_team: Team;
+  away_team: Team;
+};
 
 type Props = {
-  games: Game[]
-}
+  games: Game[];
+};
 
 export default function GameList({ games }: Props) {
   return (
@@ -27,11 +27,11 @@ export default function GameList({ games }: Props) {
         <GameCard key={game.id} game={game} />
       ))}
     </div>
-  )
+  );
 }
 
 function GameCard({ game }: { game: Game }) {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
 
   return (
     <div className="border border-gray-300 rounded-lg shadow-md p-4">
@@ -69,5 +69,5 @@ function GameCard({ game }: { game: Game }) {
         )}
       </div>
     </div>
-  )
+  );
 }

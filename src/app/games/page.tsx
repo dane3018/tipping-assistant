@@ -1,36 +1,35 @@
 // app/games/round-6/page.tsx
 
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import { createClient } from '@supabase/supabase-js'
+import { useEffect, useState } from "react";
+import { createClient } from "@supabase/supabase-js";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 
 const teamMap = new Map<number, string>([
-    [1, "Adelaide Crows"],
-    [2, "Brisbane Lions"],
-    [3, "Carlton, Blues"],
-    [4, "Collingwood Magpies"],
-    [5, "Essendon Bombers"],
-    [6, "Fremantle Dockers"],
-    [7, "Geelong Cats"],
-    [8, "Gold Coast Suns"],
-    [9, "GWS Giants"],
-    [10, "Hawthorn Hawks"],
-    [11, "Melbourne"],
-    [12, "North Melbourne Kangaroos"],
-    [13, "Port Adelaide Power"],
-    [14, "Richmond Tigers"],
-    [15, "St Kilda Saints"],
-    [16, "Sydney Swans"],
-    [17, "West Coast Eagles"],
-    [18, "Western Bulldogs"]
-]
-)
+  [1, "Adelaide Crows"],
+  [2, "Brisbane Lions"],
+  [3, "Carlton, Blues"],
+  [4, "Collingwood Magpies"],
+  [5, "Essendon Bombers"],
+  [6, "Fremantle Dockers"],
+  [7, "Geelong Cats"],
+  [8, "Gold Coast Suns"],
+  [9, "GWS Giants"],
+  [10, "Hawthorn Hawks"],
+  [11, "Melbourne"],
+  [12, "North Melbourne Kangaroos"],
+  [13, "Port Adelaide Power"],
+  [14, "Richmond Tigers"],
+  [15, "St Kilda Saints"],
+  [16, "Sydney Swans"],
+  [17, "West Coast Eagles"],
+  [18, "Western Bulldogs"],
+]);
 
 // type Game = {
 //   id: number
@@ -43,35 +42,36 @@ const teamMap = new Map<number, string>([
 // }
 
 type Game = {
-        id: number,
-        date: Date,
-        venue: string,
-        ateamid: number,
-        hteamid: number,
-        away_team: {
-          id: number,
-          name: string
-        },
-        home_team: {
-          id: number,
-          name: string
-        }
-}
+  id: number;
+  date: Date;
+  venue: string;
+  ateamid: number;
+  hteamid: number;
+  away_team: {
+    id: number;
+    name: string;
+  };
+  home_team: {
+    id: number;
+    name: string;
+  };
+};
 
 export default function Round6Games() {
-  const [games, setGames] = useState<Game[]>([])
-  const [loading, setLoading] = useState(true)
+  const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchGames = async () => {
-    //   const { data, error } = await supabase
-    //     .from('games')
-    //     .select('*')
-    //     .eq('round', 6)
-    //     .eq('year', 2025)
-    const { data, error } = await supabase
-        .from('games')
-        .select(`
+      //   const { data, error } = await supabase
+      //     .from('games')
+      //     .select('*')
+      //     .eq('round', 6)
+      //     .eq('year', 2025)
+      const { data, error } = await supabase
+        .from("games")
+        .select(
+          `
             id,
             date,
             venue,
@@ -85,25 +85,25 @@ export default function Round6Games() {
             id,
             name
             )
-        `)
-        .eq('round', 6)
-        .eq('year', 2025)
-        .order('date', { ascending: true })
+        `,
+        )
+        .eq("round", 6)
+        .eq("year", 2025)
+        .order("date", { ascending: true });
 
       if (error) {
-        console.error('Error fetching games:', error)
+        console.error("Error fetching games:", error);
       } else {
-        
-        setGames(data || [])
+        setGames(data || []);
       }
 
-      setLoading(false)
-    }
+      setLoading(false);
+    };
 
-    fetchGames()
-  }, [])
+    fetchGames();
+  }, []);
 
-  if (loading) return <p>Loading...</p>
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div className="p-4">
@@ -114,13 +114,16 @@ export default function Round6Games() {
         <ul className="space-y-2">
           {games.map((game) => (
             <li key={game.id} className="border p-3 rounded shadow">
-              <strong>{game.home_team.name}</strong> vs <strong>{game.away_team.name}</strong><br />
-              Venue: {game.venue}<br />
+              <strong>{game.home_team.name}</strong> vs{" "}
+              <strong>{game.away_team.name}</strong>
+              <br />
+              Venue: {game.venue}
+              <br />
               Start Time: {new Date(game.date).toLocaleString()}
             </li>
           ))}
         </ul>
       )}
     </div>
-  )
+  );
 }
