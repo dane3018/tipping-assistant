@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Ghost } from "lucide-react";
 import HeadToHead from "@/components/headToHead";
 import Last5 from "@/components/last5";
+import Models from "@/components/Models";
 
 const mockGames = [
   {
@@ -39,6 +40,30 @@ const mockGames = [
     },
   },
 ];
+
+const mockModels = [
+  {
+    modelName: "Squiggle",
+  winTeam: "Collingoowd",
+  confidence: 52.1,
+  margin: 7.01,
+  err: 3.3, 
+  },
+  {
+    modelName: "The Arc",
+  winTeam: "Collingoowd",
+  confidence: 54.7,
+  margin: 4.01,
+  err: 3.1,
+  },
+  {
+    modelName: "Matter of Stats",
+  winTeam: "Richmond",
+  confidence: 50.1,
+  margin: 2.01,
+  err: 3.6,
+  }
+]
 
 export default function Page() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -78,6 +103,36 @@ export default function Page() {
               ateamName="Richmond"
               h2h={[true, false, true, true, true]}
             ></HeadToHead>
+            {/* <div className="shadow-2xs border-2 p-4">
+              <h2 className="flex justify-center">Model Predictions</h2>
+
+              <table className="table-auto border-collapse text-center w-full">
+                <thead>
+                  <tr className="bg-gray-200">
+                    <th className="border px-4 py-2">Model</th>
+                    <th className="border px-4 py-2">Tip</th>
+                    <th className="border px-4 py-2">Confidence</th>
+                    <th className="border px-4 py-2">Margin</th>
+                    <th className="border px-4 py-2">Error</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[...Array(3)].map((_, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {[...Array(5)].map((_, colIndex) => (
+                        <td key={colIndex} className="border px-4 py-2">
+                          Row {rowIndex + 1}, Col {colIndex + 1}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <Button className="w-full rounded-none"> Show More</Button>
+            </div> */}
+            <Models models={mockModels}>
+
+            </Models>
           </div>
         </CollapsibleContent>
       </Collapsible>
