@@ -103,33 +103,6 @@ export default function Page() {
               ateamName="Richmond"
               h2h={[true, false, true, true, true]}
             ></HeadToHead>
-            {/* <div className="shadow-2xs border-2 p-4">
-              <h2 className="flex justify-center">Model Predictions</h2>
-
-              <table className="table-auto border-collapse text-center w-full">
-                <thead>
-                  <tr className="bg-gray-200">
-                    <th className="border px-4 py-2">Model</th>
-                    <th className="border px-4 py-2">Tip</th>
-                    <th className="border px-4 py-2">Confidence</th>
-                    <th className="border px-4 py-2">Margin</th>
-                    <th className="border px-4 py-2">Error</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {[...Array(3)].map((_, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {[...Array(5)].map((_, colIndex) => (
-                        <td key={colIndex} className="border px-4 py-2">
-                          Row {rowIndex + 1}, Col {colIndex + 1}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <Button className="w-full rounded-none"> Show More</Button>
-            </div> */}
             <Models models={mockModels}>
 
             </Models>
