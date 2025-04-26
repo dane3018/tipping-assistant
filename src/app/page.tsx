@@ -97,9 +97,7 @@ export default function Page() {
               title="Last 5 at M.C.G"
             ></Last5>
             <HeadToHead
-              hteamImgPath="collingwood.png"
-              hteamName="Collwingwood"
-              ateamImgPath="richmond.png"
+              hteamName="Collingwood"
               ateamName="Richmond"
               h2h={[true, false, true, true, true]}
             ></HeadToHead>
