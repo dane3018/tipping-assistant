@@ -12,7 +12,7 @@ export default function HeadToHead(props: h2hProps) {
       <h2 className="flex justify-center">Last 5 head to head matches </h2>
       <div className="flex justify-between pt-2">
         {props.h2h.map((homeWin, index) => (
-            <div className="felx flex-col items-center px-2">
+            <div key={index} className="felx flex-col items-center px-2">
           <img
             key={index}
             src={homeWin ? hteamImgPath : ateamImgPath}

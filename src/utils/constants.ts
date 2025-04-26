@@ -20,4 +20,8 @@ const idToTeam = new Map<number, string>([
     [18, "Western Bulldogs"],
   ]);
 
+  const currentYear = 2025;
+
+export { idToTeam, currentYear }
+
   

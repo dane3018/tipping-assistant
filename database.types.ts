@@ -165,6 +165,24 @@ export type Database = {
           },
         ]
       }
+      settings: {
+        Row: {
+          id: string
+          updated: string
+          value: string
+        }
+        Insert: {
+          id: string
+          updated?: string
+          value: string
+        }
+        Update: {
+          id?: string
+          updated?: string
+          value?: string
+        }
+        Relationships: []
+      }
       teams: {
         Row: {
           abbrev: string
