@@ -44,26 +44,26 @@ const mockGames = [
 const mockModels = [
   {
     modelName: "Squiggle",
-  winTeam: "Collingoowd",
-  confidence: 52.1,
-  margin: 7.01,
-  err: 3.3, 
+    winTeam: "Collingoowd",
+    confidence: 52.1,
+    margin: 7.01,
+    err: 3.3,
   },
   {
     modelName: "The Arc",
-  winTeam: "Collingoowd",
-  confidence: 54.7,
-  margin: 4.01,
-  err: 3.1,
+    winTeam: "Collingoowd",
+    confidence: 54.7,
+    margin: 4.01,
+    err: 3.1,
   },
   {
     modelName: "Matter of Stats",
-  winTeam: "Richmond",
-  confidence: 50.1,
-  margin: 2.01,
-  err: 3.6,
-  }
-]
+    winTeam: "Richmond",
+    confidence: 50.1,
+    margin: 2.01,
+    err: 3.6,
+  },
+];
 
 export default function Page() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -101,9 +101,7 @@ export default function Page() {
               ateamName="Richmond"
               h2h={[true, false, true, true, true]}
             ></HeadToHead>
-            <Models models={mockModels}>
-
-            </Models>
+            <Models models={mockModels}></Models>
           </div>
         </CollapsibleContent>
       </Collapsible>

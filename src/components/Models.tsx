@@ -9,7 +9,7 @@ interface model {
 }
 
 interface modelProps {
-    models: model[]
+  models: model[];
 }
 
 export default function Models(props: modelProps) {
