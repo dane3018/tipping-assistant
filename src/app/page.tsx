@@ -1,20 +1,10 @@
 "use client";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-
-import GameList from "./GameCard";
-import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Ghost } from "lucide-react";
 import HeadToHead from "@/components/headToHead";
@@ -67,6 +57,17 @@ const mockModels = [
 
 export default function Page() {
   const [isOpen, setIsOpen] = React.useState(false);
+  const [games, setGames] = React.useState<string[][]>();
+
+  useEffect(() => {
+    fetch("/api/game-data")
+      .then((res) => res.json())
+      .then((data) => {
+        
+        setGames(data.last5)
+        console.log(data)
+      })
+  }, []);
 
   return (
     <div className="flex border border-gray-300 rounded-lg shadow-md p-4 flex-col justify-between m-8">
@@ -87,13 +88,13 @@ export default function Page() {
         <CollapsibleContent>
           <div className="">
             <Last5
-              hteamWins={[true, false, false, false, true]}
-              ateamWins={[false, false, true, true, true]}
+              hteamWins={games? games[13] : ["L", "L", "L", "L", "L"]}
+              ateamWins={games? games[3] : ["L", "L", "L", "L", "L"]}
               title="Last 5 matches"
             ></Last5>
             <Last5
-              hteamWins={[true, false, true, true, true]}
-              ateamWins={[false, true, false, false, true]}
+              hteamWins={["L", "L", "L", "L", "L"]}
+              ateamWins={["L", "L", "L", "L", "L"]}
               title="Last 5 at M.C.G"
             ></Last5>
             <HeadToHead

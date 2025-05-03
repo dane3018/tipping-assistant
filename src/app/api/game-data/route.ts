@@ -19,7 +19,9 @@ export async function GET() {
     });
   }
 
-  return new Response(JSON.stringify({ last5 }), { status: 200 });
+  return new Response(JSON.stringify({ last5 }), {
+    status: 200,
+  });
 }
 
 export async function getCurRound() {
