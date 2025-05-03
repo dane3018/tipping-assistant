@@ -93,7 +93,7 @@ export default function Page() {
               title="Last 5 matches"
             ></Last5>
             <Last5
-              hteamWins={["L", "L", "L", "L", "L"]}
+              hteamWins={["D", "L", "L", "L", "L"]}
               ateamWins={["L", "L", "L", "L", "L"]}
               title="Last 5 at M.C.G"
             ></Last5>
