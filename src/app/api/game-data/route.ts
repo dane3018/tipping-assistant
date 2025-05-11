@@ -3,7 +3,7 @@ import { createClient, PostgrestError } from "@supabase/supabase-js";
 import { Database } from "../../../../database.types";
 import { type } from "os";
 import { currentYear } from "../../../utils/constants";
-import { getLast5 } from "./last5";
+import { fetchAll, fetchSingleH2H, getLast5 } from "./fetcher";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,15 +11,18 @@ const supabase = createClient<Database>(
 );
 
 export async function GET() {
-  const { data: last5, error: gamesError } = await getLast5();
 
+  // const { data: last5, error: gamesError } = await getLast5();
+  const { data: gamesData, error: gamesError } = await fetchAll()
+
+  const { data: h2h, error: h2hError } = await fetchSingleH2H(14, 4);
   if (gamesError) {
     return new Response(JSON.stringify({ error: gamesError.message }), {
       status: 500,
     });
   }
 
-  return new Response(JSON.stringify({ last5 }), {
+  return new Response(JSON.stringify({ gamesData, h2h }), {
     status: 200,
   });
 }
@@ -40,3 +43,5 @@ export async function getCurRound() {
   const roundNum = +round[0].value;
   return roundNum;
 }
+
+async function getH2H() {}

@@ -63,10 +63,9 @@ export default function Page() {
     fetch("/api/game-data")
       .then((res) => res.json())
       .then((data) => {
-        
-        setGames(data.last5)
-        console.log(data)
-      })
+        setGames(data.last5);
+        console.log(data);
+      });
   }, []);
 
   return (
@@ -88,8 +87,8 @@ export default function Page() {
         <CollapsibleContent>
           <div className="">
             <Last5
-              hteamWins={games? games[13] : ["L", "L", "L", "L", "L"]}
-              ateamWins={games? games[3] : ["L", "L", "L", "L", "L"]}
+              hteamWins={games ? games[13] : ["L", "L", "L", "L", "L"]}
+              ateamWins={games ? games[3] : ["L", "L", "L", "L", "L"]}
               title="Last 5 matches"
             ></Last5>
             <Last5
