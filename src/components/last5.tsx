@@ -1,6 +1,8 @@
+import { gameResult } from "@/utils/types";
+
 interface last5Props {
-  hteamWins: string[];
-  ateamWins: string[];
+  hteamWins: gameResult[];
+  ateamWins: gameResult[];
   title: string;
 }
 

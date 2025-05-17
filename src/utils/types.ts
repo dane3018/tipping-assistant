@@ -35,7 +35,7 @@ interface model {
 // "id, date, venue, complete, hteamid, ateamid, winnerteamid, round"
 // Upcoming games card
 // gamesCard
-export interface gamesCard {
+export interface GamesCard {
   gameData: GameData
   models: model[];
 }

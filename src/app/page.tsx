@@ -10,6 +10,8 @@ import { ChevronsUpDown, Ghost } from "lucide-react";
 import HeadToHead from "@/components/headToHead";
 import Last5 from "@/components/last5";
 import Models from "@/components/Models";
+import { GameData, GamesCard } from "@/utils/types";
+import GameCard from "@/components/GameCard";
 
 const mockGames = [
   {
@@ -57,54 +59,23 @@ const mockModels = [
 
 export default function Page() {
   const [isOpen, setIsOpen] = React.useState(false);
-  const [games, setGames] = React.useState<string[][]>();
+  const [games, setGames] = React.useState<GameData[]>([]);
 
   useEffect(() => {
     fetch("/api/game-data")
       .then((res) => res.json())
       .then((data) => {
-        setGames(data.last5);
-        console.log(data);
+        setGames(data.gamesData);
       });
   }, []);
 
   return (
-    <div className="flex border border-gray-300 rounded-lg shadow-md p-4 flex-col justify-between m-8">
-      <h2>M.C.G</h2>
-      <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Richmond</h2>
-        <span className="text-sm text-gray-500">12th April</span>
-        <h2 className="text-lg font-semibold">Collingwood</h2>
-      </div>
-
-      <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-        <CollapsibleTrigger asChild>
-          <Button variant={"ghost"} size={"default"}>
-            <span>More stats</span>
-            <ChevronsUpDown className="h-4 w-4" />
-          </Button>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          <div className="">
-            <Last5
-              hteamWins={games ? games[13] : ["L", "L", "L", "L", "L"]}
-              ateamWins={games ? games[3] : ["L", "L", "L", "L", "L"]}
-              title="Last 5 matches"
-            ></Last5>
-            <Last5
-              hteamWins={["D", "L", "L", "L", "L"]}
-              ateamWins={["L", "L", "L", "L", "L"]}
-              title="Last 5 at M.C.G"
-            ></Last5>
-            <HeadToHead
-              hteamName="Collingwood"
-              ateamName="Richmond"
-              h2h={[true, false, true, true, true]}
-            ></HeadToHead>
-            <Models models={mockModels}></Models>
-          </div>
-        </CollapsibleContent>
-      </Collapsible>
-    </div>
+    games.map((game, i) => (
+      <GameCard 
+      key={i}
+       gameData={game} 
+       models={[]}
+      ></GameCard>
+    ))
   );
 }
