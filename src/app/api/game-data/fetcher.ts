@@ -2,7 +2,7 @@ import { createClient, PostgrestError } from "@supabase/supabase-js";
 import { Database } from "../../../../database.types";
 import { getCurRound } from "./route";
 import { currentYear } from "@/utils/constants";
-import { gameResult } from "@/utils/types";
+import { GameData, gameResult } from "@/utils/types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -32,7 +32,6 @@ export async function fetchAll() {
   // fetch all games for last 5 years 
   const { data: allGames, error: allGamesErr } = await supabase.from("games")
     .select("id, date, venue, complete, hteamid, ateamid, winnerteamid, round, year")
-    .eq("complete", 100)
     .lte("year", currentYear)
     .gte("year", currentYear - 5)
     .order("date", {ascending: false})
@@ -52,27 +51,28 @@ export async function fetchAll() {
     console.log("cur round")
     curRoundGames.forEach(game => console.log(game.round+ ", "+game.year))
     
-
-  // Fetch current round and last 5
-  const { data: last6Data, error: last5Error } = await fetchLast5(roundNum);
-
-  if (last5Error || !last6Data) {
-    const errorMsg = last5Error ? last5Error.message : "Last 5 games is null";
-    return { data: null, error: { message: errorMsg}}
-  } 
-  // Spit the data into last 5 and cur round 
-  // const curRoundGames : GameSubset[] = []
-  // const last5Games : GameSubset[] = []
-
- 
-  // last6Data.map((game) => {
-  //   if (game.round == roundNum) curRoundGames.push(game)
-  //   else last5Games.push(game)
-  // })
-
+  // construct the last 5 for each team
   const cleanedLast5 = cleanLast5New(excGames);
 
-  return { data: cleanedLast5, error: null}
+  const finalGameData : GameData[] = []
+
+  for (let i = 0; i < curRoundGames.length; i++) {
+    const game = curRoundGames[i];
+    const curLast5 = [cleanedLast5[game.hteamid - 1], cleanedLast5[game.ateamid - 1]]
+    finalGameData.push({
+      id: game.id,
+      date: game.date,
+      venue: game.venue,
+      hteamid: game.hteamid,
+      ateamid: game.ateamid,
+      round: game.round,
+      last5: curLast5,
+      last5Venue: [[]],
+      h2h: []
+    })
+  }
+
+  return { data: finalGameData, error: null}
   
 }
 
@@ -99,6 +99,20 @@ function cleanLast5New( data: GameSubset[]) {
     }
   }
   return last5Arr;
+}
+
+function cleanh2h( curRoundGames: GameSubset[] , excGames: GameSubset[]) {
+  const h2hMap = new Map<number, gameResult[]>()
+  // each game has a list of game results in the perspective of the home team
+  curRoundGames.forEach((game) => {
+    h2hMap.set(game.id, [])
+  })
+
+  for (let i = 0; i < excGames.length; i++) {
+
+  }
+
+
 }
 
 function cleanLast5( data: GameSubset[]) {

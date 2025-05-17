@@ -4,10 +4,10 @@ import { Database } from "../../../../database.types";
 import { type } from "os";
 import { currentYear } from "../../../utils/constants";
 import { fetchAll, fetchSingleH2H } from "./fetcher";
-import { gameResult } from "@/utils/types";
+import { GameData, gameResult } from "@/utils/types";
 
 type CacheType = {
-  gamesData: gameResult[][] | null;
+  gamesData: GameData[] | null;
   expires: number;
 } | null;
 
@@ -20,10 +20,10 @@ const supabase = createClient<Database>(
 
 export async function GET() {
 
-  if (cache && cache.expires > Date.now()) {
-    console.log("Query is cached, returning cached result")
-    return Response.json(cache.gamesData);
-  }
+  // if (cache && cache.expires > Date.now()) {
+  //   console.log("Query is cached, returning cached result")
+  //   return Response.json(cache.gamesData);
+  // }
 
   // const { data: last5, error: gamesError } = await getLast5();
   const { data: gamesData, error: gamesError } = await fetchAll()
@@ -39,7 +39,7 @@ export async function GET() {
     });
   }
 
-  return new Response(JSON.stringify({ gamesData, h2h }), {
+  return new Response(JSON.stringify({ gamesData }), {
     status: 200,
   });
 }

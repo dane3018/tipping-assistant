@@ -13,7 +13,7 @@ export type last5h2h = gameResult[];
 // it describes the data for an upcoming game to be used in the frontend
 export interface GameData {
   id: number;
-  date: string;
+  date: string | null;
   venue: string;
   hteamid: number;
   ateamid: number;
