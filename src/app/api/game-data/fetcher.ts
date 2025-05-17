@@ -2,6 +2,7 @@ import { createClient, PostgrestError } from "@supabase/supabase-js";
 import { Database } from "../../../../database.types";
 import { getCurRound } from "./route";
 import { currentYear } from "@/utils/constants";
+import { gameResult } from "@/utils/types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,12 +10,11 @@ const supabase = createClient<Database>(
 );
 
 
-type gameResult = "W" | "L" | "D";
 
 type GameRow = Database['public']['Tables']['games']['Row'];
 
 // If your query selects: id, date, venue
-type GameSubset = Pick<GameRow, 'id' | 'date' | 'venue' | 'complete' | 'hteamid' | 'ateamid' | 'winnerteamid' | 'round'>;
+type GameSubset = Pick<GameRow, 'id' | 'date' | 'venue' | 'complete' | 'hteamid' | 'ateamid' | 'winnerteamid' | 'round' | 'year'>;
 
 /**
    * The main function of this file. Will be called by the Get method in the 
@@ -29,28 +29,77 @@ export async function fetchAll() {
     // It's a PostgrestError
     return { data: null, error: {message : "Round number is null"} };
   }
-  
+  // fetch all games for last 5 years 
+  const { data: allGames, error: allGamesErr } = await supabase.from("games")
+    .select("id, date, venue, complete, hteamid, ateamid, winnerteamid, round, year")
+    .eq("complete", 100)
+    .lte("year", currentYear)
+    .gte("year", currentYear - 5)
+    .order("date", {ascending: false})
+
+    if (allGamesErr || !allGames) {
+      const errorMsg = allGamesErr ? allGamesErr.message : "Fetching games from last 5 years is null";
+      return { data: null, error : { message: errorMsg }}
+    }
+    const excGames = allGames.filter((game) => game.year != currentYear || game.round < roundNum)
+    
+    // const last5Games = allGames.filter((game) => game.year == currentYear && (game.round >= minRound && game.round < roundNum) 
+    // )
+    const curRoundGames = allGames.filter((game) => game.year == currentYear && game.round == roundNum)
+    console.log("excluded")
+    excGames.forEach(game => console.log(game.round+ ", "+game.year))
+
+    console.log("cur round")
+    curRoundGames.forEach(game => console.log(game.round+ ", "+game.year))
+    
+
   // Fetch current round and last 5
-  const { data: last6Data, error: last5Error } = await fetchLast5();
+  const { data: last6Data, error: last5Error } = await fetchLast5(roundNum);
 
   if (last5Error || !last6Data) {
     const errorMsg = last5Error ? last5Error.message : "Last 5 games is null";
     return { data: null, error: { message: errorMsg}}
   } 
   // Spit the data into last 5 and cur round 
-  const curRoundGames : GameSubset[] = []
-  const last5Games : GameSubset[] = []
-  last6Data.map((game) => {
-    if (game.round == roundNum) curRoundGames.push(game)
-    else last5Games.push(game)
-  })
+  // const curRoundGames : GameSubset[] = []
+  // const last5Games : GameSubset[] = []
 
-  const cleanedLast5 = cleanLast5(last5Games);
+ 
+  // last6Data.map((game) => {
+  //   if (game.round == roundNum) curRoundGames.push(game)
+  //   else last5Games.push(game)
+  // })
+
+  const cleanedLast5 = cleanLast5New(excGames);
 
   return { data: cleanedLast5, error: null}
   
 }
 
+function cleanLast5New( data: GameSubset[]) {
+  const last5Arr: gameResult[][] = Array.from({ length: 18 }, () => []);
+  // array to check each team has searched last 5 games 
+  const completed = Array.from({ length: 18 }, () => false);
+
+  for (let i = 0; i < data.length; i++) {
+    const game = data[i];
+    // all teams have been done
+    if (!completed.includes(false)) break; 
+
+    const hteamRes = game.winnerteamid ? (game.winnerteamid == game.hteamid ? "W" : "L") : "D"
+    const ateamRes = game.winnerteamid ? (game.winnerteamid == game.ateamid ? "W" : "L") : "D"
+
+    if (!completed[game.hteamid - 1]) {
+      last5Arr[game.hteamid - 1].push(hteamRes)
+      if (last5Arr[game.hteamid - 1].length >= 5) completed[game.hteamid - 1] = true;
+    }
+    if (!completed[game.ateamid - 1]) {
+      last5Arr[game.ateamid - 1].push(ateamRes)
+      if (last5Arr[game.ateamid - 1].length >= 5) completed[game.ateamid - 1] = true;
+    }
+  }
+  return last5Arr;
+}
 
 function cleanLast5( data: GameSubset[]) {
   // const { data: data, error: error } = await fetchLast5();
@@ -83,8 +132,7 @@ function cleanLast5( data: GameSubset[]) {
  * Fetches all games for last 5 rounds
  * @returns
  */
-async function fetchLast5() {
-  const roundNum: number | PostgrestError = await getCurRound();
+async function fetchLast5(roundNum : number) {
 
   if (typeof roundNum !== "number") {
     // It's a PostgrestError
@@ -95,7 +143,7 @@ async function fetchLast5() {
 
   const { data: games, error: gamesError } = await supabase
     .from("games")
-    .select("id, date, venue, complete, hteamid, ateamid, winnerteamid, round")
+    .select("id, date, venue, complete, hteamid, ateamid, winnerteamid, round, year")
     .eq("complete", 100)
     .eq("year", currentYear)
     .gte("round", minRound)
@@ -121,4 +169,4 @@ export async function fetchSingleH2H(hteamid: number, ateamid: number) {
     .order("date", { ascending: false })
     .limit(5);
 }
-export { getLast5 };
+
