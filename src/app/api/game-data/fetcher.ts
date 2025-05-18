@@ -2,7 +2,7 @@ import { createClient, PostgrestError } from "@supabase/supabase-js";
 import { Database } from "../../../../database.types";
 import { getCurRound } from "./route";
 import { currentYear } from "@/utils/constants";
-import { GameData, gameResult } from "@/utils/types";
+import { GameData, gameResult, h2h } from "@/utils/types";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -136,7 +136,7 @@ function cleanh2h(curRoundGames: GameSubset[], excGames: GameSubset[]) {
     game.hteamid,
     game.ateamid,
   ]);
-  const h2hMap = new Map<number, gameResult[]>(
+  const h2hMap = new Map<number, h2h[]>(
     curRoundGames.map((game) => [game.id, []]),
   );
   const completed = Array.from({ length: gameIdTuples.length }, () => false);
@@ -162,8 +162,12 @@ function cleanh2h(curRoundGames: GameSubset[], excGames: GameSubset[]) {
             ? "W"
             : "L"
           : "D";
+          const h2hVal : h2h = {
+            result : gameRes,
+            date: game.date!
+          }
 
-        h2hMap.get(gameid)?.push(gameRes);
+        h2hMap.get(gameid)?.push(h2hVal);
         if (h2hMap.get(gameid)!.length >= 5) completed[j] = true;
       }
     }

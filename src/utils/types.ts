@@ -4,9 +4,14 @@ export type gameResult = "W" | "L" | "D";
 // Last 5 wins, last 5 at venue where each item is a teamID - 1
 export type last5 = gameResult[][];
 
+export type h2h = {
+  result : gameResult,
+  date : string
+}
+
 // single list of game results in the perspective of the home team
 // win, loss draw for the current home team of that upcoming game
-export type last5h2h = gameResult[];
+export type last5h2h = h2h[];
 
 // an array of GameData will be returned from the game-data api route
 // it describes the data for an upcoming game to be used in the frontend

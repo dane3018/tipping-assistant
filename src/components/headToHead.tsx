@@ -16,20 +16,20 @@ export default function HeadToHead(props: h2hProps) {
       <div className="flex justify-between pt-2">
         {props.h2h.map((homeRes, index) => (
           <div key={index} className="flex flex-col items-center px-2">
-            {homeRes === "D" ? (
+            {homeRes.result === "D" ? (
               <p className="text-lg font-semibold">D</p>
             ) : (
               <img
-                src={homeRes === "W" ? hteamImgPath : ateamImgPath}
+                src={homeRes.result === "W" ? hteamImgPath : ateamImgPath}
                 alt={
-                  homeRes === "W"
+                  homeRes.result === "W"
                     ? idToTeam[props.hteamid - 1]
                     : idToTeam[props.ateamid - 1]
                 }
                 className="w-18 h-18 object-contain"
               />
             )}
-            <p>{index}th April</p>
+            <p>{homeRes.date}</p>
           </div>
         ))}
       </div>
