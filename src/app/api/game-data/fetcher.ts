@@ -67,6 +67,9 @@ export async function fetchAll() {
   // construct the last 5 for each team
   const cleanedLast5 = cleanLast5New(excGames);
 
+  // construct h2h for each game in the current round
+  const cleanedh2h = cleanh2h(curRoundGames, excGames);
+
   const finalGameData: GameData[] = [];
 
   // create final object, in reversed order (ascending date order)
@@ -85,7 +88,7 @@ export async function fetchAll() {
       round: game.round,
       last5: curLast5,
       last5Venue: [[]],
-      h2h: [],
+      h2h: cleanedh2h.get(game.id) ?? [],
     });
   }
 
@@ -129,10 +132,43 @@ function cleanLast5New(data: GameSubset[]) {
 
 function cleanh2h(curRoundGames: GameSubset[], excGames: GameSubset[]) {
   const gameIdTuples = curRoundGames.map((game) => [
+    game.id,
     game.hteamid,
     game.ateamid,
   ]);
-  const res = excGames.filter((game) => h2hFilter(gameIdTuples, game));
+  const h2hMap = new Map<number, gameResult[]>(
+    curRoundGames.map((game) => [game.id, []]),
+  );
+  const completed = Array.from({ length: gameIdTuples.length }, () => false);
+  // loop through each current week game to check if the teams matched a past game
+  // if they do, add it to the results map. order of results will be opposite of chronological order
+  for (let i = 0; i < excGames.length; i++) {
+    const game = excGames[i];
+    if (!completed.includes(false)) break;
+    for (let j = 0; j < gameIdTuples.length; j++) {
+      const gameid = gameIdTuples[j][0];
+      const hteamid = gameIdTuples[j][1];
+      const ateamid = gameIdTuples[j][2];
+
+      // check if the current game is a head to head
+      if (
+        (hteamid === game.hteamid && ateamid === game.ateamid) ||
+        (hteamid === game.ateamid && ateamid === game.hteamid)
+      ) {
+        // if h2h is found but already have 5 can safely break from inner loop
+        if (completed[j]) break;
+        const gameRes = game.winnerteamid
+          ? game.winnerteamid === hteamid
+            ? "W"
+            : "L"
+          : "D";
+
+        h2hMap.get(gameid)?.push(gameRes);
+        if (h2hMap.get(gameid)!.length >= 5) completed[j] = true;
+      }
+    }
+  }
+  return h2hMap;
 }
 
 function h2hFilter(gameIdTuples: number[][], game: GameSubset) {

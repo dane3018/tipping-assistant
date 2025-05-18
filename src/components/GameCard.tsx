@@ -58,7 +58,7 @@ export default function GameCard(props: GamesCard) {
       <h2>{gameData.venue}</h2>
       <div className="flex justify-between items-center">
         <div className="flex-col">
-        <img
+          <img
             src={teamToImgPath(gameData.hteamid)}
             alt={hteamShort}
             className="w-18 h-18 object-contain"
@@ -68,12 +68,12 @@ export default function GameCard(props: GamesCard) {
 
         <span className="text-sm text-gray-500">{date.toDateString()}</span>
         <div className="flex-col">
-        <img
+          <img
             src={teamToImgPath(gameData.ateamid)}
             alt={ateamShort}
             className="w-18 h-18 object-contain"
           ></img>
-        <h2 className="text-lg font-semibold">{ateamShort}</h2>
+          <h2 className="text-lg font-semibold">{ateamShort}</h2>
         </div>
       </div>
 
@@ -99,7 +99,7 @@ export default function GameCard(props: GamesCard) {
             <HeadToHead
               hteamid={gameData.hteamid}
               ateamid={gameData.ateamid}
-              h2h={[true, false, true, true, true]}
+              h2h={gameData.h2h}
             ></HeadToHead>
             <Models models={mockModels}></Models>
           </div>
