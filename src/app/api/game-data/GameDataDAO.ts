@@ -28,13 +28,13 @@ class GameDataDAO {
   }
 
   /**
-   * The main function for the class, will fetch all data and process 
-   * it to be used in the client application. Calls a number of smaller 
-   * methods and updates the class fields then will create the final 
-   * object to be sent back to the client of the Get request 
+   * The main function for the class, will fetch all data and process
+   * it to be used in the client application. Calls a number of smaller
+   * methods and updates the class fields then will create the final
+   * object to be sent back to the client of the Get request
    */
   async fetchAll() {
-    const {data: last5, error: last5Error } = await this.getLast5()
+    const { data: last5, error: last5Error } = await this.getLast5();
   }
 
   //

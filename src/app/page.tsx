@@ -69,13 +69,7 @@ export default function Page() {
       });
   }, []);
 
-  return (
-    games.map((game, i) => (
-      <GameCard 
-      key={i}
-       gameData={game} 
-       models={[]}
-      ></GameCard>
-    ))
-  );
+  return games.map((game, i) => (
+    <GameCard key={i} gameData={game} models={[]}></GameCard>
+  ));
 }

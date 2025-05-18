@@ -8,8 +8,7 @@ export type last5 = gameResult[][];
 // win, loss draw for the current home team of that upcoming game
 export type last5h2h = gameResult[];
 
-
-// an array of GameData will be returned from the game-data api route 
+// an array of GameData will be returned from the game-data api route
 // it describes the data for an upcoming game to be used in the frontend
 export interface GameData {
   id: number;
@@ -36,6 +35,6 @@ interface model {
 // Upcoming games card
 // gamesCard
 export interface GamesCard {
-  gameData: GameData
+  gameData: GameData;
   models: model[];
 }
