@@ -5,7 +5,7 @@ import {
   CollapsibleTrigger,
 } from "./ui/collapsible";
 import { GamesCard } from "@/utils/types";
-import { idToTeam } from "@/utils/constants";
+import { idToTeam, teamNameShort, teamToImgPath } from "@/utils/constants";
 import { ChevronsUpDown } from "lucide-react";
 import { Button } from "./ui/button";
 import Last5 from "./last5";
@@ -41,16 +41,40 @@ export default function GameCard(props: GamesCard) {
   const [games, setGames] = useState<string[][]>();
   const gameData = props.gameData;
   const models = props.models;
-  const hteamName = idToTeam.get(gameData.hteamid) ?? "Collingwood";
-  const ateamName = idToTeam.get(gameData.ateamid) ?? "Collingwood";
+  const hteamShort = teamNameShort[gameData.hteamid - 1];
+  const ateamShort = teamNameShort[gameData.ateamid - 1];
+  const hteamName = idToTeam[gameData.hteamid - 1];
+  const ateamName = idToTeam[gameData.ateamid - 1];
+
+  console.log(
+    `id: ${gameData.hteamid} name: ${hteamName} short: ${hteamShort}`,
+  );
+  console.log(
+    `id: ${gameData.ateamid} name: ${ateamName} short: ${ateamShort}`,
+  );
   const date = new Date(gameData.date!);
   return (
     <div className="flex border border-gray-300 rounded-lg shadow-md p-4 flex-col justify-between m-8">
       <h2>{gameData.venue}</h2>
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">{hteamName}</h2>
+        <div className="flex-col">
+        <img
+            src={teamToImgPath(gameData.hteamid)}
+            alt={hteamShort}
+            className="w-18 h-18 object-contain"
+          ></img>
+          <h2 className="text-lg font-semibold">{hteamShort}</h2>
+        </div>
+
         <span className="text-sm text-gray-500">{date.toDateString()}</span>
-        <h2 className="text-lg font-semibold">{ateamName}</h2>
+        <div className="flex-col">
+        <img
+            src={teamToImgPath(gameData.ateamid)}
+            alt={ateamShort}
+            className="w-18 h-18 object-contain"
+          ></img>
+        <h2 className="text-lg font-semibold">{ateamShort}</h2>
+        </div>
       </div>
 
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -73,8 +97,8 @@ export default function GameCard(props: GamesCard) {
               title={`Last 5 at ${gameData.venue}`}
             ></Last5>
             <HeadToHead
-              hteamName={hteamName}
-              ateamName={ateamName}
+              hteamid={gameData.hteamid}
+              ateamid={gameData.ateamid}
               h2h={[true, false, true, true, true]}
             ></HeadToHead>
             <Models models={mockModels}></Models>

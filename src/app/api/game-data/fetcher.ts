@@ -128,22 +128,26 @@ function cleanLast5New(data: GameSubset[]) {
 }
 
 function cleanh2h(curRoundGames: GameSubset[], excGames: GameSubset[]) {
-  const gameIdTuples = curRoundGames.map(game => [game.hteamid, game.ateamid]);
-  const res = excGames.filter((game) => h2hFilter(gameIdTuples, game))
-  
+  const gameIdTuples = curRoundGames.map((game) => [
+    game.hteamid,
+    game.ateamid,
+  ]);
+  const res = excGames.filter((game) => h2hFilter(gameIdTuples, game));
 }
 
 function h2hFilter(gameIdTuples: number[][], game: GameSubset) {
   for (let i = 0; i < gameIdTuples.length; i++) {
     const hteamid = gameIdTuples[i][0];
     const ateamid = gameIdTuples[i][1];
-    // home and away teams match 
-    if ((hteamid === game.hteamid && ateamid === game.ateamid) || (hteamid === game.ateamid && ateamid === game.hteamid)) return true;
+    // home and away teams match
+    if (
+      (hteamid === game.hteamid && ateamid === game.ateamid) ||
+      (hteamid === game.ateamid && ateamid === game.hteamid)
+    )
+      return true;
   }
   return false;
 }
-
-
 
 function cleanLast5(data: GameSubset[]) {
   // const { data: data, error: error } = await fetchLast5();

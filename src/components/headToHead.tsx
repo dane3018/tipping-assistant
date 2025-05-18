@@ -1,12 +1,14 @@
+import { idToTeam } from "@/utils/constants";
+
 interface h2hProps {
-  hteamName: string;
-  ateamName: string;
+  hteamid: number;
+  ateamid: number;
   h2h: boolean[];
 }
 
 export default function HeadToHead(props: h2hProps) {
-  const hteamImgPath = `${props.hteamName.split(" ")[0]}.png`;
-  const ateamImgPath = `${props.ateamName.split(" ")[0]}.png`;
+  const hteamImgPath = `${idToTeam[props.hteamid - 1].split(" ")[0]}.png`;
+  const ateamImgPath = `${idToTeam[props.ateamid - 1].split(" ")[0]}.png`;
   return (
     <div className="shadow-2xs border-t-2 border-x-2 p-2">
       <h2 className="flex justify-center">Last 5 head to head matches </h2>
@@ -16,7 +18,11 @@ export default function HeadToHead(props: h2hProps) {
             <img
               key={index}
               src={homeWin ? hteamImgPath : ateamImgPath}
-              alt={homeWin ? props.hteamName : props.ateamName}
+              alt={
+                homeWin
+                  ? idToTeam[props.hteamid - 1]
+                  : idToTeam[props.ateamid - 1]
+              }
               className="w-18 h-18 object-contain"
             />
             <p>{index}th April</p>
