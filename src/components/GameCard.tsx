@@ -101,7 +101,7 @@ export default function GameCard(props: GamesCard) {
               ateamid={gameData.ateamid}
               h2h={gameData.h2h}
             ></HeadToHead>
-            <Models models={mockModels}></Models>
+            <Models models={props.models}></Models>
           </div>
         </CollapsibleContent>
       </Collapsible>

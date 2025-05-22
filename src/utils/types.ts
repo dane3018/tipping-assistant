@@ -28,7 +28,8 @@ export interface GameData {
 }
 
 // AI models
-interface model {
+export interface model {
+  gameId: number;
   modelName: string;
   winTeam: string;
   confidence: number;

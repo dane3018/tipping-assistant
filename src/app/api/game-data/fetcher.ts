@@ -214,6 +214,7 @@ function cleanLast5Venue(curRoundGames: GameSubset[], excGames: GameSubset[]) {
   return last5Ven;
 }
 
+
 function h2hFilter(gameIdTuples: number[][], game: GameSubset) {
   for (let i = 0; i < gameIdTuples.length; i++) {
     const hteamid = gameIdTuples[i][0];

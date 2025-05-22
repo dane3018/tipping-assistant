@@ -4,13 +4,13 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Ghost } from "lucide-react";
 import HeadToHead from "@/components/headToHead";
 import Last5 from "@/components/last5";
 import Models from "@/components/Models";
-import { GameData, GamesCard } from "@/utils/types";
+import { GameData, GamesCard, model } from "@/utils/types";
 import GameCard from "@/components/GameCard";
 
 const mockGames = [
@@ -57,9 +57,51 @@ const mockModels = [
   },
 ];
 
+interface GameTip {
+  updated: string;
+  gameid: number;
+  sourceid: number;
+  source: string;
+  ateam: string;
+  hteam: string;
+  hmargin: string;
+  ateamid: number;
+  hteamid: number;
+  tipteamid: number;
+  margin: string;
+  hconfidence: string;
+  err: string;
+  tip: string;
+  date: string;
+  year: number;
+  round: number;
+  bits: string;
+  venue: string;
+  confidence: string;
+  correct: number;
+}
+
+
+// modelName: string;
+//   winTeam: string;
+//   confidence: number;
+//   margin: number;
+//   err: number;
+
 export default function Page() {
   const [isOpen, setIsOpen] = React.useState(false);
   const [games, setGames] = React.useState<GameData[]>([]);
+  const [models, setModels] = useState<GameTip[]>([]);
+
+  const shortmodels : model[]  = models.map((model) => {
+    return {modelName: model.source,
+      gameId: model.gameid,
+      confidence: +model.confidence,
+      margin: +model.margin,
+      err: +model.err,
+      winTeam: model.tip
+    }
+  })
 
   useEffect(() => {
     fetch("/api/game-data")
@@ -67,9 +109,15 @@ export default function Page() {
       .then((data) => {
         setGames(data.gamesData);
       });
+
+    fetch("https://api.squiggle.com.au/?q=tips;year=2025;round=6")
+    .then((res) => res.json())
+    .then((data) => {
+      setModels(data.tips);
+    })
   }, []);
 
   return games.map((game, i) => (
-    <GameCard key={i} gameData={game} models={[]}></GameCard>
+    <GameCard key={i} gameData={game} models={shortmodels.filter((g) => g.gameId === game.id).splice(0,5)}></GameCard>
   ));
 }
