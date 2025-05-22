@@ -5,9 +5,9 @@ export type gameResult = "W" | "L" | "D";
 export type last5 = gameResult[][];
 
 export type h2h = {
-  result : gameResult,
-  date : string
-}
+  result: gameResult;
+  date: string;
+};
 
 // single list of game results in the perspective of the home team
 // win, loss draw for the current home team of that upcoming game

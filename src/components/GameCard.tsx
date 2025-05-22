@@ -92,8 +92,8 @@ export default function GameCard(props: GamesCard) {
               title="Last 5 matches"
             ></Last5>
             <Last5
-              hteamWins={["D", "L", "L", "L", "L"]}
-              ateamWins={["L", "L", "L", "L", "L"]}
+              hteamWins={gameData.last5Venue[0]}
+              ateamWins={gameData.last5Venue[1]}
               title={`Last 5 at ${gameData.venue}`}
             ></Last5>
             <HeadToHead
