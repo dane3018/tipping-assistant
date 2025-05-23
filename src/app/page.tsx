@@ -1,9 +1,13 @@
+import DarkModeButton from "@/components/DMButton";
+import { toggleDarkMode } from "@/utils/theme-toggle";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-8 text-center">
-      <h1 className="text-3xl md:text-4xl font-bold mb-6">Welcome to your tipping assistant</h1>
+    <main className="min-h-screen bg-gradient-blue-red text-foreground flex flex-col items-center justify-center p-8 text-center">
+      <h1 className="text-3xl md:text-4xl font-bold mb-6">
+        Welcome to your tipping assistant
+      </h1>
 
       <Link
         href="/upcoming"
@@ -11,6 +15,7 @@ export default function Home() {
       >
         Go to Upcoming Round
       </Link>
+      <DarkModeButton></DarkModeButton>
     </main>
   );
 }

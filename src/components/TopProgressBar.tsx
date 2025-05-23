@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
-import NProgress from 'nprogress';
-import 'nprogress/nprogress.css';
+import { useEffect } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import NProgress from "nprogress";
+import "nprogress/nprogress.css";
 
 // Customize the bar style (optional)
-import '@/styles/nprogress-custom.css'; // optional override
+import "@/styles/nprogress-custom.css"; // optional override
 
 NProgress.configure({ showSpinner: false, trickleSpeed: 100 });
 

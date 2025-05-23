@@ -45,13 +45,13 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(0.6471 0.1628 266.82); /* light background with a hint of blue */
+  --background: oklch(0, 0, 0); /* light background with a hint of blue */
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: oklch(0.9445 0 360);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.6 0.2 30);       /* rich orange-ish primary */
+  --primary: oklch(0.6 0.2 30); /* rich orange-ish primary */
   --primary-foreground: oklch(0.98 0 0); /* white-ish foreground */
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
@@ -118,5 +118,31 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .bg-gradient-custom {
+    background-image: linear-gradient(
+      135deg,
+      var(--background),
+      oklch(0.8 0.05 200)
+    );
+  }
+
+  .bg-gradient-blue-red {
+    background-image: linear-gradient(
+      135deg,
+      oklch(0.7 0.18 270),
+      /* Blue */ oklch(0.7 0.18 30) /* Red */
+    );
+  }
+
+  .dark .bg-gradient-blue-red {
+    background-image: linear-gradient(
+      135deg,
+      oklch(0.4 0.18 270),
+      oklch(0.4 0.18 30)
+    );
   }
 }

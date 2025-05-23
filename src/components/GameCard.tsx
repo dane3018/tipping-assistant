@@ -48,7 +48,7 @@ export default function GameCard(props: GamesCard) {
   const ateamName = idToTeam[gameData.ateamid - 1];
   const date = new Date(gameData.date!);
   return (
-    <div className="flex border border-gray-300 rounded-lg shadow-md p-4 flex-col justify-between m-8">
+    <div className="flex border bg-card border-gray-300 rounded-lg shadow-md p-4 flex-col justify-between m-8">
       <h2>{gameData.venue}</h2>
       <div className="flex justify-between items-center">
         <div className="flex-col">

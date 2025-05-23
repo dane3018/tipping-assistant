@@ -163,7 +163,7 @@ export default async function Page() {
   // console.log(models)
 
   return gamesResponse.success ? (
-    <>
+    <main className="min-h-screen">
       {gamesResponse.games.map((game, i) => (
         <GameCard
           key={i}
@@ -172,7 +172,7 @@ export default async function Page() {
           models={mockModels}
         />
       ))}
-    </>
+    </main>
   ) : (
     <p>An error has occurred: {gamesResponse.error}</p>
   );
