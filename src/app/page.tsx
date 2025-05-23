@@ -1,10 +1,8 @@
-"use client";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@radix-ui/react-collapsible";
-import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronsUpDown, Ghost } from "lucide-react";
 import HeadToHead from "@/components/headToHead";
@@ -35,6 +33,7 @@ const mockGames = [
 
 const mockModels = [
   {
+    gameId: 0,
     modelName: "Squiggle",
     winTeam: "Collingoowd",
     confidence: 52.1,
@@ -42,6 +41,7 @@ const mockModels = [
     err: 3.3,
   },
   {
+    gameId: 0,
     modelName: "The Arc",
     winTeam: "Collingoowd",
     confidence: 54.7,
@@ -49,6 +49,7 @@ const mockModels = [
     err: 3.1,
   },
   {
+    gameId: 0,
     modelName: "Matter of Stats",
     winTeam: "Richmond",
     confidence: 50.1,
@@ -81,43 +82,98 @@ interface GameTip {
   correct: number;
 }
 
+// This is a Server Component
 
-// modelName: string;
-//   winTeam: string;
-//   confidence: number;
-//   margin: number;
-//   err: number;
-
-export default function Page() {
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [games, setGames] = React.useState<GameData[]>([]);
-  const [models, setModels] = useState<GameTip[]>([]);
-
-  const shortmodels : model[]  = models.map((model) => {
-    return {modelName: model.source,
-      gameId: model.gameid,
-      confidence: +model.confidence,
-      margin: +model.margin,
-      err: +model.err,
-      winTeam: model.tip
+type GamesResponse =
+  | {
+      success: true;
+      games: GameData[];
     }
-  })
+  | {
+      success: false;
+      error: string;
+    };
 
-  useEffect(() => {
-    fetch("/api/game-data")
-      .then((res) => res.json())
-      .then((data) => {
-        setGames(data.gamesData);
-      });
+export async function fetchGamesData(): Promise<GamesResponse> {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/game-data`,
+      {
+        cache: "no-store",
+      },
+    );
 
-    fetch("https://api.squiggle.com.au/?q=tips;year=2025;round=6")
-    .then((res) => res.json())
-    .then((data) => {
-      setModels(data.tips);
-    })
-  }, []);
+    if (!res.ok) {
+      const errorBody = await res.text();
+      return {
+        success: false,
+        error: `Failed to fetch games: ${res.status} ${res.statusText} - ${errorBody}`,
+      };
+    }
 
-  return games.map((game, i) => (
-    <GameCard key={i} gameData={game} models={shortmodels.filter((g) => g.gameId === game.id).splice(0,5)}></GameCard>
-  ));
+    const data = await res.json();
+
+    if (!data?.gamesData || !Array.isArray(data.gamesData)) {
+      return {
+        success: false,
+        error: "Invalid data structure returned from API",
+      };
+    }
+
+    return {
+      success: true,
+      games: data.gamesData,
+    };
+  } catch (error: any) {
+    console.error("Error in fetchGamesData:", error.message || error);
+    return {
+      success: false,
+      error: "Could not load games data. Please try again later.",
+    };
+  }
+}
+
+async function fetchModels(): Promise<GameTip[]> {
+  const res = await fetch(
+    "https://api.squiggle.com.au/?q=tips;year=2025;round=6",
+    {
+      cache: "no-store",
+    },
+  );
+  const data = await res.json();
+  return data.tips;
+}
+
+function transformTips(models: GameTip[]): model[] {
+  return models.map((model) => ({
+    modelName: model.source,
+    gameId: model.gameid,
+    confidence: +model.confidence,
+    margin: +model.margin,
+    err: +model.err,
+    winTeam: model.tip,
+  }));
+}
+
+export default async function Page() {
+  // const [games, models] = await Promise.all([fetchGamesData(), fetchModels()]);
+  const gamesResponse = await fetchGamesData();
+
+  // const shortmodels = transformTips(models);
+  // console.log(models)
+
+  return gamesResponse.success ? (
+    <>
+      {gamesResponse.games.map((game, i) => (
+        <GameCard
+          key={i}
+          gameData={game}
+          // models={shortmodels.filter((g) => g.gameId === game.id).slice(0, 5)}
+          models={mockModels}
+        />
+      ))}
+    </>
+  ) : (
+    <p>An error has occurred: {gamesResponse.error}</p>
+  );
 }

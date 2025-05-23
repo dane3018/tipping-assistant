@@ -1,3 +1,4 @@
+"use client";
 import { useState, useEffect } from "react";
 import {
   Collapsible,
@@ -45,13 +46,6 @@ export default function GameCard(props: GamesCard) {
   const ateamShort = teamNameShort[gameData.ateamid - 1];
   const hteamName = idToTeam[gameData.hteamid - 1];
   const ateamName = idToTeam[gameData.ateamid - 1];
-
-  console.log(
-    `id: ${gameData.hteamid} name: ${hteamName} short: ${hteamShort}`,
-  );
-  console.log(
-    `id: ${gameData.ateamid} name: ${ateamName} short: ${ateamShort}`,
-  );
   const date = new Date(gameData.date!);
   return (
     <div className="flex border border-gray-300 rounded-lg shadow-md p-4 flex-col justify-between m-8">

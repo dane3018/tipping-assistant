@@ -70,7 +70,7 @@ export async function fetchAll() {
   // construct h2h for each game in the current round
   const cleanedh2h = cleanh2h(curRoundGames, excGames);
 
-  // Construct last 5 venue 
+  // Construct last 5 venue
   const cleanedVenue = cleanLast5Venue(curRoundGames, excGames);
 
   const finalGameData: GameData[] = [];
@@ -84,8 +84,8 @@ export async function fetchAll() {
     ];
     const cur5Venue = [
       cleanedVenue[game.hteamid - 1],
-      cleanedVenue[game.ateamid - 1]
-    ]
+      cleanedVenue[game.ateamid - 1],
+    ];
     finalGameData.push({
       id: game.id,
       date: game.date,
@@ -189,31 +189,44 @@ function cleanLast5Venue(curRoundGames: GameSubset[], excGames: GameSubset[]) {
     const curGame = curRoundGames[i];
     // all teams have been done
     const venue = curGame.venue;
-    const hGamesAtVenue = excGames.filter(
-      (game) =>
-        game.venue === venue &&
-        (game.hteamid === curGame.hteamid || game.ateamid === curGame.hteamid),
-    ).slice(0, 5)
-    const aGamesAtVenue = excGames.filter(
-      (game) =>
-        game.venue === venue &&
-        (game.hteamid === curGame.ateamid || game.ateamid === curGame.ateamid),
-    ).slice(0,5)
-    // Convert games into game results 
+    const hGamesAtVenue = excGames
+      .filter(
+        (game) =>
+          game.venue === venue &&
+          (game.hteamid === curGame.hteamid ||
+            game.ateamid === curGame.hteamid),
+      )
+      .slice(0, 5);
+    const aGamesAtVenue = excGames
+      .filter(
+        (game) =>
+          game.venue === venue &&
+          (game.hteamid === curGame.ateamid ||
+            game.ateamid === curGame.ateamid),
+      )
+      .slice(0, 5);
+    // Convert games into game results
     hGamesAtVenue.forEach((game) => {
       // console.log("venue: "+game.venue+" hteam: "+ game.hteamid+" ateam: "+game.ateamid+" round: "+game.round + " Year: "+game.year+" winner: "+game.winnerteamid)
-      const res = game.winnerteamid ? (game.winnerteamid === curGame.hteamid ? "W" : "L") : "D"
-      last5Ven[curGame.hteamid - 1].push(res)
+      const res = game.winnerteamid
+        ? game.winnerteamid === curGame.hteamid
+          ? "W"
+          : "L"
+        : "D";
+      last5Ven[curGame.hteamid - 1].push(res);
     });
 
     aGamesAtVenue.forEach((game) => {
-      const res = game.winnerteamid ? (game.winnerteamid === curGame.ateamid ? "W" : "L") : "D"
-      last5Ven[curGame.ateamid - 1].push(res)
+      const res = game.winnerteamid
+        ? game.winnerteamid === curGame.ateamid
+          ? "W"
+          : "L"
+        : "D";
+      last5Ven[curGame.ateamid - 1].push(res);
     });
   }
   return last5Ven;
 }
-
 
 function h2hFilter(gameIdTuples: number[][], game: GameSubset) {
   for (let i = 0; i < gameIdTuples.length; i++) {
