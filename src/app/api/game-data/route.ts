@@ -43,21 +43,5 @@ export async function GET() {
   });
 }
 
-export async function getCurRound() {
-  const { data: round, error: roundError } = await supabase
-    .from("settings")
-    .select("value")
-    .eq("id", "currentRound")
-    .limit(1);
-
-  if (roundError) {
-    return roundError;
-  }
-
-  console.log(`round is ${round}`);
-
-  const roundNum = +round[0].value;
-  return roundNum;
-}
 
 async function getH2H() {}

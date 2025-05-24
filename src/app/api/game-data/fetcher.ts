@@ -1,6 +1,5 @@
 import { createClient, PostgrestError } from "@supabase/supabase-js";
 import { Database } from "../../../../database.types";
-import { getCurRound } from "./route";
 import { currentYear } from "@/utils/constants";
 import { GameData, gameResult, h2h } from "@/utils/types";
 
@@ -100,6 +99,21 @@ export async function fetchAll() {
   }
 
   return { data: finalGameData, error: null };
+}
+
+async function getCurRound() {
+  const { data , error: roundError } = await supabase
+    .from("settings")
+    .select("value")
+    .eq("id", "currentRound")
+    .single()
+
+  if (roundError) {
+    return roundError;
+  }
+
+  const roundNum = +data.value
+  return roundNum;
 }
 
 function cleanLast5New(data: GameSubset[]) {
