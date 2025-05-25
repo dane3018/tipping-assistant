@@ -1,8 +1,6 @@
 // app/api/game-data/route.ts
-import { createClient, PostgrestError } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { Database } from "../../../../database.types";
-import { type } from "os";
-import { currentYear } from "../../../utils/constants";
 import { fetchAll, fetchSingleH2H } from "./fetcher";
 import { GameData, gameResult } from "@/utils/types";
 
@@ -19,19 +17,7 @@ const supabase = createClient<Database>(
 );
 
 export async function GET() {
-  // if (cache && cache.expires > Date.now()) {
-  //   console.log("Query is cached, returning cached result")
-  //   return Response.json(cache.gamesData);
-  // }
-
-  // const { data: last5, error: gamesError } = await getLast5();
   const { data: gamesData, error: gamesError } = await fetchAll();
-
-  cache = {
-    gamesData,
-    expires: Date.now() + 1000 * 60 * 60, // 1 hour
-  };
-  const { data: h2h, error: h2hError } = await fetchSingleH2H(14, 4);
   if (gamesError) {
     return new Response(JSON.stringify({ error: gamesError.message }), {
       status: 500,

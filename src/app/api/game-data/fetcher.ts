@@ -37,6 +37,7 @@ export async function fetchAll() {
     // It's a PostgrestError
     return { data: null, error: { message: "Round number is null" } };
   }
+  console.log("round num:"+ roundNum)
   // fetch all games for last 5 years
   const { data: allGames, error: allGamesErr } = await supabase
     .from("games")
