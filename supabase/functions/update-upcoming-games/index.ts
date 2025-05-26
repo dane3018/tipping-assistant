@@ -3,26 +3,35 @@
 // This enables autocomplete, go to definition, etc.
 
 // Setup type definitions for built-in Supabase Runtime APIs
-import "jsr:@supabase/functions-js/edge-runtime.d.ts"
-import { createClient } from 'jsr:@supabase/supabase-js@2'
+import "jsr:@supabase/functions-js/edge-runtime.d.ts";
+import { createClient } from "jsr:@supabase/supabase-js@2";
 
 Deno.serve(async (req) => {
   try {
     const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
-    )
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      {
+        global: {
+          headers: { Authorization: req.headers.get("Authorization")! },
+        },
+      },
+    );
 
-    const { data, error } = await supabase.from('settings').select("value").eq("id", "currentRound").single()
+    const { data, error } = await supabase
+      .from("settings")
+      .select("value")
+      .eq("id", "currentRound")
+      .single();
 
     if (error) {
-      throw error
+      throw error;
     }
-    const curRound : number = +data.value;
+    const curRound: number = +data.value;
+    console.log(`Fetched current round as ${curRound}`);
     const nextRound = curRound + 1;
 
-    const apiUrl = `https://api.squiggle.com.au/?q=games;year=2025;round=${nextRound}`;
+    const apiUrl = `https://api.squiggle.com.au/?q=games;year=2025;round=${curRound}`;
     const apiResponse = await fetch(apiUrl);
     if (!apiResponse.ok) {
       console.error("Error fetching Squiggle API data");
@@ -30,10 +39,9 @@ Deno.serve(async (req) => {
     }
     const apiJson = await apiResponse.json();
     const games = apiJson.games;
-    const returnGames = []
 
     for (let i = 0; i < games.length; i++) {
-      const curGame = games[i]
+      const curGame = games[i];
       const updatedGame = {
         ascore: curGame.ascore,
         hscore: curGame.hscore,
@@ -42,41 +50,44 @@ Deno.serve(async (req) => {
         hgoals: curGame.hgoals,
         hbehinds: curGame.hbehinds,
         complete: curGame.complete,
-        winnerteamid: curGame.winnerteamid
-      }
-      returnGames.push(updatedGame)
+        winnerteamid: curGame.winnerteamid,
+      };
+
+      console.log(
+        `Updating game ${curGame.hteam} (id=${curGame.hteamid}) vs ${curGame.ateam} (id=${curGame.ateamid})`,
+      );
+      const { error: updateErr } = await supabase
+        .from("games")
+        .update(updatedGame)
+        .eq("id", curGame.id);
+
+      if (updateErr) throw updateErr;
     }
 
+    const { error: roundErr } = await supabase
+      .from("settings")
+      .update({
+        value: String(nextRound),
+      })
+      .eq("id", "currentRound");
 
-    // const { error: updateEr } = await supabase.from("games").update({
-      
-    // }).eq(, nextRound)
+    if (roundErr) throw roundErr;
 
-    return new Response(JSON.stringify({ returnGames }), {
-      headers: { 'Content-Type': 'application/json' },
-      status: 200,
-    })
+    return new Response(
+      JSON.stringify({
+        data: `Successfully updated games for round ${curRound}. Round has been incremented to ${nextRound}`,
+      }),
+      {
+        headers: { "Content-Type": "application/json" },
+        status: 200,
+      },
+    );
   } catch (err) {
-    return new Response(String(err?.message ?? err), { status: 500 })
+    const errMsg = String(err?.message ?? err);
+    console.error(`Error updating games or roundNum: ${errMsg}`);
+    return new Response(errMsg, { status: 500 });
   }
-})
-
-console.log("Hello from Functions!")
-
-
-// Deno.serve(async (req) => {
-//   const { name } = await req.json()
-//   const data = {
-//     message: `Hello ${name}!`,
-//   }
-
-
-
-//   return new Response(
-//     JSON.stringify(data),
-//     { headers: { "Content-Type": "application/json" } },
-//   )
-// })
+});
 
 /* To invoke locally:
 
