@@ -29,5 +29,4 @@ export async function GET() {
   });
 }
 
-
 async function getH2H() {}

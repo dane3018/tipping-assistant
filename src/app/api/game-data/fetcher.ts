@@ -37,7 +37,7 @@ export async function fetchAll() {
     // It's a PostgrestError
     return { data: null, error: { message: "Round number is null" } };
   }
-  console.log("round num:"+ roundNum)
+  console.log("round num:" + roundNum);
   // fetch all games for last 5 years
   const { data: allGames, error: allGamesErr } = await supabase
     .from("games")
@@ -103,17 +103,17 @@ export async function fetchAll() {
 }
 
 async function getCurRound() {
-  const { data , error: roundError } = await supabase
+  const { data, error: roundError } = await supabase
     .from("settings")
     .select("value")
     .eq("id", "currentRound")
-    .single()
+    .single();
 
   if (roundError) {
     return roundError;
   }
 
-  const roundNum = +data.value
+  const roundNum = +data.value;
   return roundNum;
 }
 

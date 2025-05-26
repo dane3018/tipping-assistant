@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
@@ -9,7 +9,10 @@ export default function DarkModeButton() {
   // Load theme on mount
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
-    const isDarkMode = savedTheme === "dark" || (!savedTheme && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const isDarkMode =
+      savedTheme === "dark" ||
+      (!savedTheme &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
     if (isDarkMode) {
       document.documentElement.classList.add("dark");
       setIsDark(true);
