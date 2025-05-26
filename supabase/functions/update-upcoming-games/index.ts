@@ -1,12 +1,16 @@
-// Follow this setup guide to integrate the Deno language server with your editor:
-// https://deno.land/manual/getting_started/setup_your_environment
-// This enables autocomplete, go to definition, etc.
-
-// Setup type definitions for built-in Supabase Runtime APIs
+/**
+ * Edge function to be run weekly which will do 2 things.
+ * 1. Update the results of the games of the past week
+ * 2. Increment the currentRound value in settings table
+ */
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "jsr:@supabase/supabase-js@2";
 
 Deno.serve(async (req) => {
+  if (req.method !== "POST") {
+    console.log(`Received ${req.method}, terminating`);
+    return new Response(`Method ${req.method} Not Allowed`, { status: 405 });
+  }
   try {
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
