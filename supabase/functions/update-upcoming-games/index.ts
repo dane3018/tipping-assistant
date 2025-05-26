@@ -57,15 +57,15 @@ Deno.serve(async (req) => {
         winnerteamid: curGame.winnerteamid,
       };
 
-      console.log(
-        `Updating game ${curGame.hteam} (id=${curGame.hteamid}) vs ${curGame.ateam} (id=${curGame.ateamid})`,
-      );
       const { error: updateErr } = await supabase
         .from("games")
         .update(updatedGame)
         .eq("id", curGame.id);
 
       if (updateErr) throw updateErr;
+      console.log(
+        `Updated gameid ${curGame.id}: ${curGame.hteam} (id=${curGame.hteamid}) vs ${curGame.ateam} (id=${curGame.ateamid})`,
+      );
     }
 
     const { error: roundErr } = await supabase
@@ -76,6 +76,8 @@ Deno.serve(async (req) => {
       .eq("id", "currentRound");
 
     if (roundErr) throw roundErr;
+
+    console.log(`Updated currentRound from ${curRound} to ${nextRound}`);
 
     return new Response(
       JSON.stringify({
