@@ -152,6 +152,12 @@ function cleanLast5New(data: GameSubset[]) {
   return last5Arr;
 }
 
+/**
+ * 
+ * @param curRoundGames The games of the current round for which we are checking last 5 h2h
+ * @param excGames Games to search through
+ * @returns a Map where id = game.id and value is the game results of the last 5
+ */
 function cleanh2h(curRoundGames: GameSubset[], excGames: GameSubset[]) {
   const gameIdTuples = curRoundGames.map((game) => [
     game.id,
