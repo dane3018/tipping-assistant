@@ -97,10 +97,7 @@ type GamesResponse =
 export async function fetchGamesData(): Promise<GamesResponse> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/game-data`,
-      {
-        cache: "no-store",
-      },
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/game-data`
     );
 
     if (!res.ok) {

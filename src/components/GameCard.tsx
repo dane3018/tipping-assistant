@@ -12,6 +12,7 @@ import { Button } from "./ui/button";
 import Last5 from "./last5";
 import HeadToHead from "./headToHead";
 import Models from "./Models";
+import Link from "next/link";
 
 const mockModels = [
   {
@@ -95,6 +96,7 @@ export default function GameCard(props: GamesCard) {
               ateamid={gameData.ateamid}
               h2h={gameData.h2h}
             ></HeadToHead>
+            <Link href={`upcoming/${encodeURIComponent(gameData.id)}`}>Advanced Stats</Link>
             <Models models={props.models}></Models>
           </div>
         </CollapsibleContent>
