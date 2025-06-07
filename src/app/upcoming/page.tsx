@@ -97,7 +97,7 @@ type GamesResponse =
 export async function fetchGamesData(): Promise<GamesResponse> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/game-data`
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/game-data`,
     );
 
     if (!res.ok) {
@@ -136,12 +136,11 @@ async function fetchModels(): Promise<GameTip[]> {
     {
       cache: "no-store",
       headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) ' 
-      // You can include other headers if needed
-      // 'Authorization': `Bearer ${process.env.SOME_API_KEY}`,
-    }
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) ",
+        // You can include other headers if needed
+        // 'Authorization': `Bearer ${process.env.SOME_API_KEY}`,
+      },
     },
-    
   );
   const data = await res.json();
   return data.tips;

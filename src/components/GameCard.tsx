@@ -49,10 +49,10 @@ export default function GameCard(props: GamesCard) {
   const ateamName = idToTeam[gameData.ateamid - 1];
   const date = new Date(gameData.date!);
   return (
-    <div className="flex border bg-card border-gray-300 rounded-lg shadow-md p-4 flex-col justify-between m-8">
-      <h2>{gameData.venue}</h2>
-      <div className="flex justify-between items-center">
-        <div className="flex-col">
+    <div className="flex border bg-card border-border rounded-lg shadow-md p-4 flex-col justify-between m-8">
+      <h2 className="px-1 pb-1">{gameData.venue}</h2>
+      <div className="flex justify-between items-center relative">
+        <div className="flex flex-col items-center">
           <img
             src={teamToImgPath(gameData.hteamid)}
             alt={hteamShort}
@@ -61,8 +61,8 @@ export default function GameCard(props: GamesCard) {
           <h2 className="text-lg font-semibold">{hteamShort}</h2>
         </div>
 
-        <span className="text-sm text-gray-500">{date.toDateString()}</span>
-        <div className="flex-col">
+        <span className="absolute left-1/2 transform -translate-x-1/2 text-sm text-secondary-foreground">{date.toDateString()}</span>
+        <div className="felx flex-col items-end">
           <img
             src={teamToImgPath(gameData.ateamid)}
             alt={ateamShort}
