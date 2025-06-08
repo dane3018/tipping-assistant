@@ -1,6 +1,6 @@
 -- Settings table
 insert into public.settings (id, "value")
-values ('currentRound', '13');
+values ('currentRound', '6');
 
 -- Teams table
 INSERT INTO public.teams (id, name, abbrev, logo, debut, retirement) VALUES (1, 'Adelaide Crows', 'AC', 'logo_ac', 9999, 9999);
