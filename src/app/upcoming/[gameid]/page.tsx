@@ -1,4 +1,5 @@
 import { createClient } from "@/utils/supabase/server";
+import { notFound } from "next/navigation";
 import { FC } from "react";
 
 interface PageProps {
@@ -17,9 +18,17 @@ async function getFocusedH2H(gameid: number) {
   return data;
 }
 
-export const GamePage: FC<PageProps> = async ({ params }) => {
-  const gameid = parseInt(params.gameid);
-  const focusedH2H = await getFocusedH2H(gameid);
+async function getGame(gameid: number) {
+    const supabase = await createClient();
+    const data =  await supabase.from("games").select("*").eq("id", gameid).single()
+    return data;
+}
+
+export default async function GamePage({ params }: { params: { gameid: string } }) {
+  const { gameid } = params;
+  const gameidNum = parseInt(gameid);
+  const {data: game, error } = await getGame(gameidNum)
+  const focusedH2H = await getFocusedH2H(gameidNum);
 
   return (
     <div>
@@ -37,4 +46,3 @@ export const GamePage: FC<PageProps> = async ({ params }) => {
   );
 };
 
-export default GamePage;

@@ -132,9 +132,8 @@ export async function fetchGamesData(): Promise<GamesResponse> {
 
 async function fetchModels(): Promise<GameTip[]> {
   const res = await fetch(
-    "https://api.squiggle.com.au/?q=tips;year=2025;round=6",
+    "https://api.squiggle.com.au/?q=tips;year=2025;round=13",
     {
-      cache: "no-store",
       headers: {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) ",
         // You can include other headers if needed
@@ -160,9 +159,9 @@ function transformTips(models: GameTip[]): model[] {
 export default async function Page() {
   // const [games, models] = await Promise.all([fetchGamesData(), fetchModels()]);
   const gamesResponse = await fetchGamesData();
-  //const models = await fetchModels()
-  // const shortmodels = transformTips(models);
-  //console.log(models)
+  // const modelTips = await fetchModels();
+  // const shortModels = transformTips(modelTips);
+
 
   return gamesResponse.success ? (
     <main className="min-h-screen">
@@ -170,7 +169,7 @@ export default async function Page() {
         <GameCard
           key={i}
           gameData={game}
-          // models={shortmodels.filter((g) => g.gameId === game.id).slice(0, 5)}
+          // models={shortModels.filter((g) => g.gameId == game.id)}
           models={mockModels}
         />
       ))}
