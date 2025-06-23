@@ -162,7 +162,6 @@ export default async function Page() {
   // const modelTips = await fetchModels();
   // const shortModels = transformTips(modelTips);
 
-
   return gamesResponse.success ? (
     <main className="min-h-screen">
       {gamesResponse.games.map((game, i) => (

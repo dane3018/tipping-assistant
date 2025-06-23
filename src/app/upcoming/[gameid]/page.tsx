@@ -19,15 +19,23 @@ async function getFocusedH2H(gameid: number) {
 }
 
 async function getGame(gameid: number) {
-    const supabase = await createClient();
-    const data =  await supabase.from("games").select("*").eq("id", gameid).single()
-    return data;
+  const supabase = await createClient();
+  const data = await supabase
+    .from("games")
+    .select("*")
+    .eq("id", gameid)
+    .single();
+  return data;
 }
 
-export default async function GamePage({ params }: { params: { gameid: string } }) {
+export default async function GamePage({
+  params,
+}: {
+  params: { gameid: string };
+}) {
   const { gameid } = params;
   const gameidNum = parseInt(gameid);
-  const {data: game, error } = await getGame(gameidNum)
+  const { data: game, error } = await getGame(gameidNum);
   const focusedH2H = await getFocusedH2H(gameidNum);
 
   return (
@@ -44,5 +52,4 @@ export default async function GamePage({ params }: { params: { gameid: string } 
       ))}
     </div>
   );
-};
-
+}

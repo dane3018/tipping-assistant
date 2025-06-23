@@ -61,7 +61,9 @@ export default function GameCard(props: GamesCard) {
           <h2 className="text-lg font-semibold">{hteamShort}</h2>
         </div>
 
-        <span className="absolute left-1/2 transform -translate-x-1/2 text-sm text-secondary-foreground">{date.toDateString()}</span>
+        <span className="absolute left-1/2 transform -translate-x-1/2 text-sm text-secondary-foreground">
+          {date.toDateString()}
+        </span>
         <div className="felx flex-col items-end">
           <img
             src={teamToImgPath(gameData.ateamid)}
@@ -96,7 +98,9 @@ export default function GameCard(props: GamesCard) {
               ateamid={gameData.ateamid}
               h2h={gameData.h2h}
             ></HeadToHead>
-            <Link href={`upcoming/${encodeURIComponent(gameData.id)}`}>Advanced Stats</Link>
+            <Link href={`upcoming/${encodeURIComponent(gameData.id)}`}>
+              Advanced Stats
+            </Link>
             <Models models={props.models}></Models>
           </div>
         </CollapsibleContent>
