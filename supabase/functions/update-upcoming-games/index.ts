@@ -22,6 +22,15 @@ Deno.serve(async (req) => {
       },
     );
 
+    // ensure invoker has required permissions
+    const authHeader = req.headers.get("Authorization");
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+
+    if (!authHeader || authHeader !== `Bearer ${serviceRoleKey}`) {
+      console.log("Request unauthorized");
+      return new Response("Unauthorized", { status: 401 });
+    }
+
     const { data, error } = await supabase
       .from("settings")
       .select("value")
@@ -68,7 +77,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    const { error: roundErr } = await supabase
+    const { status: status, error: roundErr } = await supabase
       .from("settings")
       .update({
         value: String(nextRound),
@@ -77,7 +86,9 @@ Deno.serve(async (req) => {
 
     if (roundErr) throw roundErr;
 
-    console.log(`Updated currentRound from ${curRound} to ${nextRound}`);
+    console.log(
+      `Updated currentRound from ${curRound} to ${nextRound} with status ${status}`,
+    );
 
     return new Response(
       JSON.stringify({
