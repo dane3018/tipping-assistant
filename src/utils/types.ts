@@ -44,3 +44,28 @@ export interface GamesCard {
   gameData: GameData;
   models: model[];
 }
+
+// Squiggle tips (models) datatype 
+export type SquiggleModel = {
+  updated: string;
+  gameid: number;
+  sourceid: number;
+  source: string;
+  ateam: string;
+  hteam: string;
+  hmargin: string;
+  ateamid: number;
+  hteamid: number;
+  tipteamid: number;
+  margin: string;
+  hconfidence: string;
+  err: string;
+  tip: string;
+  date: string;
+  year: number;
+  round: number;
+  bits: string;
+  venue: string;
+  confidence: string;
+  correct: number;
+}
