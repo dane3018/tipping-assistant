@@ -97,7 +97,7 @@ type GamesResponse =
 export async function fetchGamesData(): Promise<GamesResponse> {
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/game-data`,
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/upcoming`,
     );
 
     if (!res.ok) {
