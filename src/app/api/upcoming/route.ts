@@ -1,15 +1,7 @@
 // app/api/game-data/route.ts
 import { createClient } from "@supabase/supabase-js";
 import { Database } from "../../../../database.types";
-import { fetchAll, fetchSingleH2H } from "./fetcher";
-import { GameData, gameResult } from "@/utils/types";
-
-type CacheType = {
-  gamesData: GameData[] | null;
-  expires: number;
-} | null;
-
-let cache: CacheType = null;
+import { fetchAll } from "./fetcher";
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -29,4 +21,3 @@ export async function GET() {
   });
 }
 
-async function getH2H() {}
